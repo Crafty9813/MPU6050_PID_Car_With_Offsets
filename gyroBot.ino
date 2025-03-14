@@ -2,7 +2,6 @@
 #include <MPU6050.h>
 #include <PID_v1.h>
 
-
 // Motor pins
 const int enA = 9;
 const int in1 = 2;
@@ -11,23 +10,19 @@ const int enB = 10;
 const int in3 = 4;
 const int in4 = 5;
 
-
 MPU6050 mpu;
 
-
-// PID variables
-double Setpoint = 0;  // 0 deg for moving straight
+double Setpoint = 0;  //0 deg for straight
 double Input, Output;
 
 
-// PID constants
-double Kp = 0.9;  // proportional
-double Ki = 0.0;  // integral
-double Kd = 0.1;  // derivative
+// PID
+double Kp = 0.9;
+double Ki = 0.0;
+double Kd = 0.1;
 
 
 PID pid(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
-
 
 unsigned long startTime;
 int state = 0;  // 0: forward, 1: right, 2: forward, 3: left, 4: stop
@@ -80,9 +75,7 @@ void loop() {
     double dt = 0.01;
     Input += (double)gz * dt / 131.0;  // 131 LSB per degree/sec scaling factor
 
-
     pid.Compute();
-
 
     int leftSpeed, rightSpeed;
     unsigned long currentTime = millis();
@@ -229,8 +222,8 @@ void loop() {
     }
 
 
-    leftSpeed = constrain(leftSpeed, -254, 254);
-    rightSpeed = constrain(rightSpeed, -254, 254);
+    leftSpeed = constrain(leftSpeed, -255, 255);
+    rightSpeed = constrain(rightSpeed, -255, 255);
 
 
     analogWrite(enA, abs(leftSpeed));
